@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+    img {
+      height: 50%;
+      width: 50%;
+    }
+    </style>>
+    <meta charset="UTF-8">
+    <title>The Lucy Game</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+  </head>
+  <body>
+    <div id="content">
+      <h1>The Lucy Game</h1>
+      <p>Choose the button with a real nickname for Lucy, as a reward - a cute picture will appear!</p>
+      <button onclick="startGame()">Click here to play!</button>
+      <p></p>
+      <button id="button1" style="display:none;" onclick="generateResponse(this)"></button>
+      <button id="button2" style="display:none;" onclick="generateResponse(this)"></button>
+      <button id="button3" style="display:none;" onclick="generateResponse(this)"></button>
+      <p></p>
+      <div id="response-container"></div>
+      <img id="image" alt="Lucy" style="display:none;"/>
+    </div>
+  </body>
+</html>
