@@ -84,3 +84,29 @@ function generateResponse(button){
     document.getElementById("button"+i).disabled = true;
   }
 }
+
+/**
+ * Fetches message from the servers and adds them to the DOM.
+ */
+function getMessagesFromServer() {
+  fetch('/data').then(response => response.json()).then((messages) => {
+    const messageListElement = document.getElementById('message-container');
+    messageListElement.innerHTML = '';
+    for(i=0; i<messages.length; i++){
+      messageListElement.appendChild(
+        createListElement('Name: ' + messages[i].name));
+      messageListElement.appendChild(
+        createListElement('Liked the game? ' + messages[i].likedGame));
+      messageListElement.appendChild(
+        createListElement('Comment: ' + messages[i].comment));
+    }
+  });
+}
+
+/** Creates an <p> element containing text. */
+function createListElement(text) {
+  const pElement = document.createElement('P');
+  pElement.innerText = text;
+  return pElement;
+}
+
