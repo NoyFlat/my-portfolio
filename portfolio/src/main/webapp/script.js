@@ -92,7 +92,7 @@ function getCommentsFromServer() {
   fetch('/data').then(response => response.json()).then((comments) => {
     const commentListElement = document.getElementById('comment-container');
     commentListElement.innerHTML = '';
-    for(i=0; i<comments.length; i++){
+    for(var i = 0; i < comments.length; i++){
       commentListElement.appendChild(
         createListElement('Name: ' + comments[i].name));
       commentListElement.appendChild(
