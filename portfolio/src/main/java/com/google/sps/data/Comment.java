@@ -14,6 +14,7 @@
 
 package com.google.sps.data;
 
+/** Class containing comment in a website */
 public final class Comment {
 
   private final String name;
