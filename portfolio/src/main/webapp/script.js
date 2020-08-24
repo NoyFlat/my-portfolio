@@ -84,3 +84,29 @@ function generateResponse(button){
     document.getElementById("button"+i).disabled = true;
   }
 }
+
+/**
+ * Fetches comments from the servers and adds them to the DOM.
+ */
+function getCommentsFromServer() {
+  fetch('/data').then(response => response.json()).then((comments) => {
+    const commentListElement = document.getElementById('comment-container');
+    commentListElement.innerHTML = '';
+    for(var i = 0; i < comments.length; i++){
+      commentListElement.appendChild(
+        createListElement('Name: ' + comments[i].name));
+      commentListElement.appendChild(
+        createListElement('Liked the game? ' + comments[i].likedGame));
+      commentListElement.appendChild(
+        createListElement('Comment: ' + comments[i].comment));
+    }
+  });
+}
+
+/** Creates an <p> element containing text. */
+function createListElement(text) {
+  const pElement = document.createElement('P');
+  pElement.innerText = text;
+  return pElement;
+}
+

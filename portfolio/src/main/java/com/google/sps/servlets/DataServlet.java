@@ -14,19 +14,50 @@
 
 package com.google.sps.servlets;
 
+import com.google.sps.data.Comment;
+import com.google.gson.Gson;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 
-/** Servlet that returns some example content. TODO: modify this file to handle comments data */
+/** Servlet that returns some example content.*/
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
+  private List<Comment> comments;
+
+  @Override
+  public void init() {
+    comments = new ArrayList<>();
+  }
+
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    response.setContentType("text/html;");
-    response.getWriter().println("<h1>Hello world!</h1>");
+    response.setContentType("application/json");
+    String json = new Gson().toJson(comments);
+    response.getWriter().println(json);
   }
+
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    // Get the input from the form.
+    String name = getParameter(request, "name");
+    String opinion = getParameter(request, "opinion");
+    String comment = getParameter(request, "comment");
+    comments.add(new Comment(name, opinion, comment));    
+    response.sendRedirect("/index.html");
+  }
+
+  private String getParameter(HttpServletRequest request, String parameter){
+    String value = request.getParameter(parameter);
+    if(value == null){
+        return "";
+    }
+    return value;
+  }
+
 }
