@@ -43,11 +43,10 @@ public class DataServlet extends HttpServlet {
     List<Comment> comments = new ArrayList<>();
     // Iterate over all comments in datastore and add them to array
     for (Entity entity : results.asIterable()) {
-      long id = entity.getKey().getId();
       String name = (String) entity.getProperty("name");
       String opinion = (String) entity.getProperty("opinion");
       String content = (String) entity.getProperty("content");
-      Comment comment = new Comment(id, name, opinion, content);
+      Comment comment = new Comment(name, opinion, content);
       comments.add(comment);
     }
     // Display comments
