@@ -17,14 +17,20 @@ package com.google.sps.data;
 /** Class containing comment in a website */
 public final class Comment {
 
+  private final long id;
   private final String name;
   private final String likedGame;
   private final String comment;
 
-  public Comment(String name, String likedGame, String comment){
+  public Comment(long id, String name, String likedGame, String comment){
+      this.id = id;
       this.name = name;
       this.likedGame = likedGame;
       this.comment = comment;
+  }
+
+  public long getId(){
+      return this.id;
   }
 
   public String getName(){
