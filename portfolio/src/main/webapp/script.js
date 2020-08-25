@@ -89,7 +89,7 @@ function generateResponse(button){
  * Fetches comments from the servers and adds them to the DOM.
  */
 function getCommentsFromServer() {
-  fetch('/data').then(response => response.json()).then((comments) => {
+  fetch('/data?comment-num=' + document.getElementById("quantity").value).then(response => response.json()).then((comments) => {
     const commentListElement = document.getElementById('comment-container');
     commentListElement.innerHTML = '';
     for(var i = 0; i < comments.length; i++){
@@ -98,7 +98,7 @@ function getCommentsFromServer() {
       commentListElement.appendChild(
         createListElement('Liked the game? ' + comments[i].likedGame));
       commentListElement.appendChild(
-        createListElement('Comment: ' + comments[i].comment));
+        createListElement('Comment: ' + comments[i].content));
     }
   });
 }

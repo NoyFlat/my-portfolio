@@ -14,12 +14,14 @@
 
 package com.google.sps.servlets;
 
+import java.lang.Integer;
 import com.google.sps.data.Comment;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.gson.Gson;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
@@ -35,7 +37,7 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    Query query = new Query("Comment");
+    Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
@@ -43,11 +45,14 @@ public class DataServlet extends HttpServlet {
     List<Comment> comments = new ArrayList<>();
     // Iterate over all comments in datastore and add them to array
     for (Entity entity : results.asIterable()) {
-      String name = (String) entity.getProperty("name");
-      String opinion = (String) entity.getProperty("opinion");
-      String content = (String) entity.getProperty("content");
-      Comment comment = new Comment(name, opinion, content);
-      comments.add(comment);
+      if(comments.size() < Integer.parseInt(request.getParameter("comment-num"))){
+        String name = (String) entity.getProperty("name");
+        String opinion = (String) entity.getProperty("opinion");
+        String content = (String) entity.getProperty("content");
+        long timestamp = (long) entity.getProperty("timestamp");
+        Comment comment = new Comment(name, opinion, content, timestamp);
+        comments.add(comment);
+      }
     }
     // Display comments
     Gson gson = new Gson();
@@ -57,16 +62,18 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    long timestamp = System.currentTimeMillis();
     // Get the input from the form.
     String name = getParameter(request, "name");
     String opinion = getParameter(request, "opinion");
-    String comment = getParameter(request, "comment");
+    String content = getParameter(request, "content");
     // Add comment to datastore
     Entity commentEntity = new Entity("Comment");
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     commentEntity.setProperty("name", name);
     commentEntity.setProperty("opinion", opinion);
-    commentEntity.setProperty("comment", comment);
+    commentEntity.setProperty("content", content);
+    commentEntity.setProperty("timestamp", timestamp);
     datastore.put(commentEntity);   
     // Direct the user to main page
     response.sendRedirect("/index.html");

@@ -19,12 +19,14 @@ public final class Comment {
 
   private final String name;
   private final String likedGame;
-  private final String comment;
+  private final String content;
+  private final long timestamp;
 
-  public Comment(String name, String likedGame, String comment){
+  public Comment(String name, String likedGame, String content, long timestamp){
       this.name = name;
       this.likedGame = likedGame;
-      this.comment = comment;
+      this.content = content;
+      this.timestamp = timestamp;
   }
 
   public String getName(){
@@ -35,7 +37,11 @@ public final class Comment {
       return this.likedGame;
   }
 
-  public String getComment(){
-      return this.comment;
+  public String getContent(){
+      return this.content;
+  }
+
+  public long getTimestamp(){
+      return this.timestamp;
   }
 }
