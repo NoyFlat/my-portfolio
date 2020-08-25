@@ -21,12 +21,17 @@ public final class Comment {
   private final String likedGame;
   private final String content;
   private final long timestamp;
+  private final long id;
 
-  public Comment(String name, String likedGame, String content, long timestamp){
+  public Comment(long id, String name, String likedGame, String content, long timestamp){
+      this.id = id;
       this.name = name;
       this.likedGame = likedGame;
       this.content = content;
       this.timestamp = timestamp;
+  }
+  public long getId(){
+      return this.id;
   }
 
   public String getName(){
