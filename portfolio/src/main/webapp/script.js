@@ -92,21 +92,51 @@ function getCommentsFromServer() {
   fetch('/data?comment-num=' + document.getElementById("quantity").value).then(response => response.json()).then((comments) => {
     const commentListElement = document.getElementById('comment-container');
     commentListElement.innerHTML = '';
-    for(var i = 0; i < comments.length; i++){
-      commentListElement.appendChild(
-        createListElement('Name: ' + comments[i].name));
-      commentListElement.appendChild(
-        createListElement('Liked the game? ' + comments[i].likedGame));
-      commentListElement.appendChild(
-        createListElement('Comment: ' + comments[i].content));
-    }
+    comments.forEach((comment) => {
+      commentListElement.appendChild(createCommentElement(comment));
+    })
   });
 }
 
-/** Creates an <p> element containing text. */
-function createListElement(text) {
-  const pElement = document.createElement('P');
-  pElement.innerText = text;
-  return pElement;
+/**
+ * Creates a comment box with all it's fields
+ */
+function createCommentElement(comment){
+    // Create comment Element
+    const commentElement = document.createElement('div');
+    commentElement.className = "comment";
+    // Add a delete button
+    const deleteButtonElement = document.createElement('button');
+    deleteButtonElement.innerText = 'Delete';
+    deleteButtonElement.addEventListener('click', () => {
+      deleteComment(comment);
+      // Remove the comment from the DOM.
+      commentElement.remove();
+    });
+    // Add all the field to the comment
+    commentElement.appendChild(
+      createListElement('Name: ' + comment.name, "P"));
+    commentElement.appendChild(
+      createListElement('Liked the game? ' + comment.likedGame, "P"));
+    commentElement.appendChild(
+      createListElement('Comment: ' + comment.content, "P"));
+    commentElement.appendChild(deleteButtonElement);
+    return commentElement;
+}
+
+/**
+ * Deletes comment from the servers
+ */
+function deleteComment(comment) {
+  const params = new URLSearchParams();
+  params.append('id', comment.id);
+  fetch('/delete-data', {method: 'POST', body: params}).then(getCommentsFromServer());
+}
+
+/** Creates an element of type "type" containing text. */
+function createListElement(text, type) {
+  const element = document.createElement(type);
+  element.innerText = text;
+  return element;
 }
 
