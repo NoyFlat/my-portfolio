@@ -71,9 +71,6 @@ public final class Comment {
   public long getId(){
       return this.id;
   }
-  public long getId(){
-      return this.id;
-  }
 
   public String getName(){
       return this.name;
