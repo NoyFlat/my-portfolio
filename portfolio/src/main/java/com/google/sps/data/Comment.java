@@ -16,15 +16,60 @@ package com.google.sps.data;
 
 /** Class containing comment in a website */
 public final class Comment {
+  
+  public static class Builder {
 
-  private final String name;
-  private final String likedGame;
-  private final String comment;
+    private String name;
+    private String likedGame;
+    private String content;
+    private long timestamp;
+    private final long id;
 
-  public Comment(String name, String likedGame, String comment){
+    public Builder(long id){
+      this.id = id;
+    }
+
+    public Builder withName(String name){
       this.name = name;
+      return this;
+    }
+
+    public Builder hasOpinion(String likedGame){
       this.likedGame = likedGame;
-      this.comment = comment;
+      return this;
+    }
+
+    public Builder commentContent(String content){
+      this.content = content;
+      return this;
+    }
+
+    public Builder atTime(long timestamp){
+      this.timestamp = timestamp;
+      return this;
+    }
+
+    public Comment build(){
+      return new Comment(this);
+    }
+  }
+
+  private String name;
+  private String likedGame;
+  private String content;
+  private long timestamp;
+  private final long id; 
+
+  private Comment(Builder builder){
+      this.id = builder.id;
+      this.name = builder.name;
+      this.likedGame = builder.likedGame;
+      this.content = builder.content;
+      this.timestamp = builder.timestamp;
+  }
+
+  public long getId(){
+      return this.id;
   }
 
   public String getName(){
@@ -35,7 +80,11 @@ public final class Comment {
       return this.likedGame;
   }
 
-  public String getComment(){
-      return this.comment;
+  public String getContent(){
+      return this.content;
+  }
+
+  public long getTimestamp(){
+      return this.timestamp;
   }
 }

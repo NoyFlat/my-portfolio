@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>My Portfolio</title>
     <link rel="stylesheet" href="style.css">
-    <script src="script.js"></script>
+    <script src="script2.js"></script>
   </head>
   <body onload="getCommentsFromServer()">
     <div id="content">
@@ -22,6 +22,10 @@
       </video>
       <br>
       <h3>Comments</h3>
+      <form action="#" onchange="getCommentsFromServer()">
+        <label for="quantity">Number of comments to display (between 1 and 10):</label>
+        <input type="number" id="quantity" name="quantity" min="1" max="10" value="3">
+      </form>
       <ul id="comment-container"></ul>
       <h3>Leave a comment on the page</h3>
       <form action="/data" method="POST">
@@ -32,8 +36,8 @@
           <label for="yes">Yes</label><br>
           <input type="radio" name="opinion" value="no">
           <label for="no">No</label><br>
-          <label for="comment">Tell us why</label><br>
-          <textarea id="comment" name="comment" rows="4" cols="40"></textarea><br>
+          <label for="content">Tell us why</label><br>
+          <textarea id="content" name="content" rows="4" cols="40"></textarea><br>
           <input type="submit" value="Submit">
       </form>
     </div>
