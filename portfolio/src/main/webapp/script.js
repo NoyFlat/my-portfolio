@@ -125,6 +125,29 @@ function createCommentElement(comment){
 }
 
 /**
+ * Fetches the login status and displays the connect\disconnet url.
+ */
+function displayLoginBox() {
+    fetch('/login').then(response => response.json()).then((userStatus) => {
+      const loginElement = document.getElementById('login');
+      loginElement.innerHTML = '';
+      const aElement = document.createElement("a");
+      aElement.href = userStatus.url;
+      if(userStatus.isLoggedIn == "yes") {
+          loginElement.appendChild(
+              createListElement("Hello " + userStatus.email, "P"));
+          aElement.innerText = "Log out";
+      }
+      else {
+         loginElement.appendChild(
+              createListElement("Hello stranger", "P"));
+          aElement.innerText = "Log in";
+      }
+      loginElement.appendChild(aElement);
+    });
+}
+
+/**
  * Deletes comment from the servers
  */
 function deleteComment(comment) {
@@ -140,3 +163,7 @@ function createListElement(text, type) {
   return element;
 }
 
+function callOnloadFunctions(){
+  getCommentsFromServer();
+  displayLoginBox();
+}
