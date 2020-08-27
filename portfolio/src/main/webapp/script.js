@@ -115,7 +115,7 @@ function createCommentElement(comment){
     });
     // Add all the field to the comment
     commentElement.appendChild(
-      createListElement('Email: ' + comment.email, "P"));
+      createListElement('Name: ' + comment.name, "P"));
     commentElement.appendChild(
       createListElement('Liked the game? ' + comment.likedGame, "P"));
     commentElement.appendChild(

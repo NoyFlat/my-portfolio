@@ -79,7 +79,7 @@ public class LoginServlet extends HttpServlet {
   /**
    * Returns the nickname of the user with id, or empty String if the user has not set a nickname.
    */
-  private String getUserNickname(String id) {
+  public static String getUserNickname(String id) {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     Query query =
         new Query("UserInfo")

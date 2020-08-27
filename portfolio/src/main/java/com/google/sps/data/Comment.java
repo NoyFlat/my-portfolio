@@ -19,7 +19,7 @@ public final class Comment {
   
   public static class Builder {
 
-    private String email;
+    private String name;
     private String likedGame;
     private String content;
     private long timestamp;
@@ -29,8 +29,8 @@ public final class Comment {
       this.id = id;
     }
 
-    public Builder withEmail(String email){
-      this.email = email;
+    public Builder withName(String name){
+      this.name = name;
       return this;
     }
 
@@ -54,7 +54,7 @@ public final class Comment {
     }
   }
 
-  private String email;
+  private String name;
   private String likedGame;
   private String content;
   private long timestamp;
@@ -62,7 +62,7 @@ public final class Comment {
 
   private Comment(Builder builder){
       this.id = builder.id;
-      this.email = builder.email;
+      this.name = builder.name;
       this.likedGame = builder.likedGame;
       this.content = builder.content;
       this.timestamp = builder.timestamp;
@@ -72,8 +72,8 @@ public final class Comment {
       return this.id;
   }
 
-  public String getEmail(){
-      return this.email;
+  public String getName(){
+      return this.name;
   }
 
   public String getLikedGame(){
