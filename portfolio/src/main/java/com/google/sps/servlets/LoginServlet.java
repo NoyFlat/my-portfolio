@@ -29,15 +29,14 @@ public class LoginServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType("text/html");
 
+    String urlToRedirectTo = "/";
     UserService userService = UserServiceFactory.getUserService();
     if (userService.isUserLoggedIn()) {
       String userEmail = userService.getCurrentUser().getEmail();
-      String urlToRedirectToAfterUserLogsOut = "/";
-      String logoutUrl = userService.createLogoutURL(urlToRedirectToAfterUserLogsOut);
+      String logoutUrl = userService.createLogoutURL(urlToRedirectTo);
       response.getWriter().println(createJson("yes", logoutUrl, userEmail));
     } else {
-      String urlToRedirectToAfterUserLogsIn = "/";
-      String loginUrl = userService.createLoginURL(urlToRedirectToAfterUserLogsIn);
+      String loginUrl = userService.createLoginURL(urlToRedirectTo);
       response.getWriter().println(createJson("no", loginUrl, ""));
     }
   }
