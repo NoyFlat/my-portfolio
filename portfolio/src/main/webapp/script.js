@@ -125,6 +125,31 @@ function createCommentElement(comment){
 }
 
 /**
+ * Fetches the login status and displays the connect\disconnet url.
+ */
+function displayLoginBox() {
+    fetch('/login').then(response => response.json()).then((userStatus) => {
+      const loginElement = document.getElementById('login');
+      // Create link in html and put the correct url
+      const aElement = document.createElement("a");
+      aElement.href = userStatus.url;
+
+      if(userStatus.isLoggedIn == "yes") {
+          loginElement.appendChild(
+              createListElement("Hello " + userStatus.email, "P"));
+          aElement.innerText = "Log out";
+      }
+      else {
+         loginElement.appendChild(
+              createListElement("Hello stranger", "P"));
+          aElement.innerText = "Log in";
+      }
+      // Adds the link below the message to user
+      loginElement.appendChild(aElement);
+    });
+}
+
+/**
  * Deletes comment from the servers
  */
 function deleteComment(comment) {
@@ -140,3 +165,8 @@ function createListElement(text, type) {
   return element;
 }
 
+/** Calls all the functions that we want when the page loads. */
+function callOnloadFunctions(){
+  getCommentsFromServer();
+  displayLoginBox();
+}
