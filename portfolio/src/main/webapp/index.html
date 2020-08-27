@@ -7,7 +7,15 @@
     <script src="script.js"></script>
   </head>
   <body onload="callOnloadFunctions()">
-    <div id="login">
+    <div>
+        <ul id="login-container"></ul>
+        <ul>
+          <form action="/login" method="POST" id="addNicknameForm">
+            <p>You don't have a nickname</p><br>
+            <label for="nickname">Choose a nickname:</label>
+            <input type="text" id="nickname" name="nickname">
+          </form>
+        </ul>
     </div>
     <div id="content">
       <h1>Noy's Portfolio</h1>

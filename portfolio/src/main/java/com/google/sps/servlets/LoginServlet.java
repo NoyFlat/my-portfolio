@@ -16,6 +16,11 @@ package com.google.sps.servlets;
 
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -32,20 +37,59 @@ public class LoginServlet extends HttpServlet {
     String urlToRedirectTo = "/";
     UserService userService = UserServiceFactory.getUserService();
     if (userService.isUserLoggedIn()) {
+      String nickname = getUserNickname(userService.getCurrentUser().getUserId());
       String userEmail = userService.getCurrentUser().getEmail();
       String logoutUrl = userService.createLogoutURL(urlToRedirectTo);
-      response.getWriter().println(createJson("yes", logoutUrl, userEmail));
+      response.getWriter().println(createJson("yes", logoutUrl, userEmail, nickname));
     } else {
       String loginUrl = userService.createLoginURL(urlToRedirectTo);
-      response.getWriter().println(createJson("no", loginUrl, ""));
+      response.getWriter().println(createJson("no", loginUrl, "", ""));
     }
   }
 
-  private String createJson(String isLoggedIn, String url, String email){
+    @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    UserService userService = UserServiceFactory.getUserService();
+    if (userService.isUserLoggedIn()) {
+      String nickname = request.getParameter("nickname");
+      String id = userService.getCurrentUser().getUserId();
+ 
+      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+      Entity entity = new Entity("UserInfo", id);
+      entity.setProperty("id", id);
+      entity.setProperty("nickname", nickname);
+      // The put() function automatically inserts new data or updates existing data based on ID
+      datastore.put(entity);
+      // Direct the user to main page
+      response.sendRedirect("/index.html");
+    }
+
+    
+  }
+
+  private String createJson(String isLoggedIn, String url, String email, String nickname){
       String json = "{ ";
       json += "\"isLoggedIn\": \"" + isLoggedIn + "\", ";
       json += "\"url\": \"" + url + "\", ";
-      json += "\"email\": \"" + email + "\"";
+      json += "\"email\": \"" + email + "\", ";
+      json += "\"nickname\": \"" + nickname + "\"";
       return json + " }";
+  }
+
+  /**
+   * Returns the nickname of the user with id, or empty String if the user has not set a nickname.
+   */
+  private String getUserNickname(String id) {
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    Query query =
+        new Query("UserInfo")
+            .setFilter(new Query.FilterPredicate("id", Query.FilterOperator.EQUAL, id));
+    PreparedQuery results = datastore.prepare(query);
+    Entity entity = results.asSingleEntity();
+    if (entity == null) {
+      return "";
+    }
+    String nickname = (String) entity.getProperty("nickname");
+    return nickname;
   }
 }
