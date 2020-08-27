@@ -138,11 +138,14 @@ function displayLoginBox() {
           loginElement.appendChild(
               createListElement("Hello " + userStatus.email, "P"));
           aElement.innerText = "Log out";
+          document.getElementById('addCommentForm').style = "";
       }
       else {
          loginElement.appendChild(
               createListElement("Hello stranger", "P"));
           aElement.innerText = "Log in";
+          document.getElementById('addCommentForm').style = "display:none;";
+          document.getElementById('leaveACommentHeading').innerText = "To leave a comment, please log in";
       }
       // Adds the link below the message to user
       loginElement.appendChild(aElement);
