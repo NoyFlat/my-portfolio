@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>My Portfolio</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="script.js"></script>
   </head>
   <body onload="callOnloadFunctions()">
@@ -18,11 +19,13 @@
       <p></p>
       <a href="game.html" target="_blank">The Lucy Game</a>
       <p></p>
-      <video width="320" height="240" controls>
+      <video width="640" height="480" controls>
       <source src="videos/Lucy_video.mp4"src= type="video/mp4">
       Your browser does not support the video tag.
       </video>
       <br>
+      <h2>My favorite Wolt orders</h2>
+      <div id="chart-container"></div>
       <h3>Comments</h3>
       <form action="#" onchange="getCommentsFromServer()">
         <label for="quantity">Number of comments to display (between 1 and 10):</label>

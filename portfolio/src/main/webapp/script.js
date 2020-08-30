@@ -12,6 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+google.charts.load('current', {'packages':['corechart']});
+google.charts.setOnLoadCallback(drawChart);
+
 const nicknames =
       ['Efrat', 'Patchpootcheet', 'Patchpoocheeter', 'Cheeter', 'Tamlugeet', 'Pakpukeet', 'FritFruiteet', 'Lucifer', 'Lucinda', 'Nancy Pelucy',
       'El Monstro', 'Chaplupeet', 'Pupper', 'Puppinda', 'Lucifur', 'Lucy \"The Juice\" Flat Noam'];
@@ -169,4 +172,28 @@ function createListElement(text, type) {
 function callOnloadFunctions(){
   getCommentsFromServer();
   displayLoginBox();
+}
+
+/** Creates a chart and adds it to the page. */
+function drawChart() {
+  const data = new google.visualization.DataTable();
+  data.addColumn('string', 'Restaurants');
+  data.addColumn('number', 'Count');
+        data.addRows([
+          ['Vong', 3],
+          ['Taqureia', 3],
+          ['Pazza Pizza Bar', 4],
+          ['Hummus Yossef', 6],
+          ['Vitrina', 4]
+        ]);
+
+  const options = {
+    'title': 'Wolt orders (partial)',
+    'width':600,
+    'height':480
+  };
+
+  const chart = new google.visualization.PieChart(
+      document.getElementById('chart-container'));
+  chart.draw(data, options);
 }
