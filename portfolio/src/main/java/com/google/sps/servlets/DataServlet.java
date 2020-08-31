@@ -22,6 +22,9 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.appengine.api.datastore.Query.Filter;
+import com.google.appengine.api.datastore.Query.FilterPredicate;
+import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.FetchOptions;
 import com.google.gson.Gson;
 import java.io.IOException;
@@ -80,7 +83,25 @@ public class DataServlet extends HttpServlet {
     commentEntity.setProperty("opinion", opinion);
     commentEntity.setProperty("content", content);
     commentEntity.setProperty("timestamp", timestamp);
-    datastore.put(commentEntity);   
+    datastore.put(commentEntity);
+    // Modify chart entity in datastore
+    Filter answerFilter = new FilterPredicate("answer", FilterOperator.EQUAL, opinion);
+    Query query = new Query("Chart").setFilter(answerFilter);
+    PreparedQuery results = datastore.prepare(query);
+    Entity chartEntity;
+    // If entity is in datastore, add 1 to count
+    if(results.countEntities(FetchOptions.Builder.withDefaults()) > 0){
+        chartEntity = results.asSingleEntity();
+        long count = (long)chartEntity.getProperty("count") + 1;
+        chartEntity.setProperty("count", count);
+    }
+    // If entity isn't in datastore, add it
+    else{
+        chartEntity = new Entity("Chart");
+        chartEntity.setProperty("answer", opinion);
+        chartEntity.setProperty("count", 1);
+    }
+    datastore.put(chartEntity);
     // Direct the user to main page
     response.sendRedirect("/index.html");
   }
