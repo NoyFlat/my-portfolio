@@ -13,7 +13,8 @@
 // limitations under the License.
 
 google.charts.load('current', {'packages':['corechart']});
-google.charts.setOnLoadCallback(drawChart);
+google.charts.setOnLoadCallback(drawWoltChart);
+google.charts.setOnLoadCallback(drawGameVotesChart);
 
 const nicknames =
       ['Efrat', 'Patchpootcheet', 'Patchpoocheeter', 'Cheeter', 'Tamlugeet', 'Pakpukeet', 'FritFruiteet', 'Lucifer', 'Lucinda', 'Nancy Pelucy',
@@ -174,8 +175,8 @@ function callOnloadFunctions(){
   displayLoginBox();
 }
 
-/** Creates a chart and adds it to the page. */
-function drawChart() {
+/** Creates the Wolt chart and adds it to the page. */
+function drawWoltChart() {
   const data = new google.visualization.DataTable();
   data.addColumn('string', 'Restaurants');
   data.addColumn('number', 'Count');
@@ -194,6 +195,29 @@ function drawChart() {
   };
 
   const chart = new google.visualization.PieChart(
-      document.getElementById('chart-container'));
+      document.getElementById('wolt-chart-container'));
   chart.draw(data, options);
+}
+
+/** Creates a game votes chart and adds it to the page. */
+function drawGameVotesChart() {
+  fetch('/chart-data').then(response => response.json())
+  .then((gameVotes) => {
+    const data = new google.visualization.DataTable();
+    data.addColumn('string', 'Opinion');
+    data.addColumn('number', 'Votes');
+    Object.keys(gameVotes).forEach((opinion) => {
+      data.addRow([opinion, gameVotes[opinion]]);
+    });
+
+    const options = {
+      'title': 'What commenters answered to \"Did you like the Lucy game?\"',
+      'width':600,
+      'height':500
+    };
+
+    const chart = new google.visualization.ColumnChart(
+        document.getElementById('game-chart-container'));
+    chart.draw(data, options);
+  });
 }
