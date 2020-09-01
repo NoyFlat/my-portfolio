@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/chart-data")
 public class ChartServlet extends HttpServlet {
 
+  // Holds the catagories and how many votes there where
   private Map<String, Long> gameVotes = new HashMap<>();
 
   @Override
@@ -39,6 +40,7 @@ public class ChartServlet extends HttpServlet {
     Query query = new Query("Chart");
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
+    // Add to map all the catagories and votes
     for (Entity entity : results.asIterable()){
         String answer = (String)entity.getProperty("answer");
         long count = (long)entity.getProperty("count");
