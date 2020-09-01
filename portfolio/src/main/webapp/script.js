@@ -115,7 +115,7 @@ function createCommentElement(comment){
     });
     // Add all the field to the comment
     commentElement.appendChild(
-      createListElement('Email: ' + comment.email, "P"));
+      createListElement('Name: ' + comment.name, "P"));
     commentElement.appendChild(
       createListElement('Liked the game? ' + comment.likedGame, "P"));
     commentElement.appendChild(
@@ -129,22 +129,29 @@ function createCommentElement(comment){
  */
 function displayLoginBox() {
     fetch('/login').then(response => response.json()).then((userStatus) => {
-      const loginElement = document.getElementById('login');
+      const loginElement = document.getElementById('login-container');
       // Create link in html and put the correct url
       const aElement = document.createElement("a");
       aElement.href = userStatus.url;
 
-      if(userStatus.isLoggedIn == "yes") {
+      if(userStatus.isLoggedIn == true) {
           loginElement.appendChild(
               createListElement("Hello " + userStatus.email, "P"));
           aElement.innerText = "Log out";
           document.getElementById('addCommentForm').style = "";
+          if(userStatus.nickname == ""){
+            document.getElementById('addNicknameForm').style = "";
+          }
+          else{
+            document.getElementById('addNicknameForm').style = "display:none;";
+          }
       }
       else {
          loginElement.appendChild(
               createListElement("Hello stranger", "P"));
           aElement.innerText = "Log in";
           document.getElementById('addCommentForm').style = "display:none;";
+          document.getElementById('addNicknameForm').style = "display:none;";          
           document.getElementById('leaveACommentHeading').innerText = "To leave a comment, please log in";
       }
       // Adds the link below the message to user
