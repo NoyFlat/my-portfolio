@@ -16,6 +16,9 @@ package com.google.sps.servlets;
 
 import java.lang.Integer;
 import com.google.sps.data.Comment;
+import com.google.sps.servlets.LoginServlet;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -45,7 +48,7 @@ public class DataServlet extends HttpServlet {
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
-    
+
     List<Comment> comments = new ArrayList<>();
     int commentQuantity = Integer.parseInt(request.getParameter("comment-num"));
     // Iterate over all comments in datastore and add them to array
@@ -72,14 +75,17 @@ public class DataServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     long timestamp = System.currentTimeMillis();
+    // Get user email
+    UserService userService = UserServiceFactory.getUserService();
+    String nickname = LoginServlet.getUserNickname(userService.getCurrentUser().getUserId());
+    //String email = userService.getCurrentUser().getEmail();
     // Get the input from the form.
-    String name = getParameter(request, "name");
     String opinion = getParameter(request, "opinion");
     String content = getParameter(request, "content");
     // Add comment to datastore
     Entity commentEntity = new Entity("Comment");
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    commentEntity.setProperty("name", name);
+    commentEntity.setProperty("name", nickname);
     commentEntity.setProperty("opinion", opinion);
     commentEntity.setProperty("content", content);
     commentEntity.setProperty("timestamp", timestamp);
