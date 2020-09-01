@@ -134,7 +134,7 @@ function displayLoginBox() {
       const aElement = document.createElement("a");
       aElement.href = userStatus.url;
 
-      if(userStatus.loginStatus == "yes") {
+      if(userStatus.isLoggedIn == true) {
           loginElement.appendChild(
               createListElement("Hello " + userStatus.email, "P"));
           aElement.innerText = "Log out";

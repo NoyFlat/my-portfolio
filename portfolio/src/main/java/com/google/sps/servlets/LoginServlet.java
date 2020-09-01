@@ -43,10 +43,10 @@ public class LoginServlet extends HttpServlet {
       String nickname = getUserNickname(userService.getCurrentUser().getUserId());
       String userEmail = userService.getCurrentUser().getEmail();
       String logoutUrl = userService.createLogoutURL(urlToRedirectTo);
-      nicknameData = new NicknameData("yes", logoutUrl, userEmail, nickname);
+      nicknameData = new NicknameData(true, logoutUrl, userEmail, nickname);
     } else {
       String loginUrl = userService.createLoginURL(urlToRedirectTo);
-      nicknameData = new NicknameData("no", loginUrl, "", "");
+      nicknameData = new NicknameData(false, loginUrl, "", "");
     }
     // Create JSON according to the user data
     Gson gson = new Gson();
@@ -79,7 +79,7 @@ public class LoginServlet extends HttpServlet {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     Query query =
         new Query("UserInfo")
-            .setFilter(new Query.FilterPredicate("__key__", Query.FilterOperator.EQUAL, KeyFactory.createKey("UserInfo", id)));
+            .setFilter(new Query.FilterPredicate(Entity.KEY_RESERVED_PROPERTY, Query.FilterOperator.EQUAL, KeyFactory.createKey("UserInfo", id)));
     PreparedQuery results = datastore.prepare(query);
     Entity entity = results.asSingleEntity();
     if (entity == null) {
@@ -92,33 +92,18 @@ public class LoginServlet extends HttpServlet {
   /** Class containing the login status and nickname of a user*/
   private class NicknameData {
       
-    private String loginStatus;
+    private Boolean isLoggedIn;
     private String url;
     private String email;
     private String nickname; 
 
-    private NicknameData(String loginStatus, String url, String email, String nickname){
-        this.loginStatus = loginStatus;
+    private NicknameData(Boolean isLoggedIn, String url, String email, String nickname){
+        this.isLoggedIn = isLoggedIn;
         this.url = url;
         this.email = email;
         this.nickname = nickname;
     }
 
-    private String getLoginStatus(){
-        return this.loginStatus;
-    }
-
-    private String getNickname(){
-        return this.nickname;
-    }
-
-    private String getUrl(){
-        return this.url;
-    }
-
-    private String getEmail(){
-        return this.email;
-    }
   }
     
 }
