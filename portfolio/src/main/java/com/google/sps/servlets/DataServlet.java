@@ -16,6 +16,8 @@ package com.google.sps.servlets;
 
 import java.lang.Integer;
 import com.google.sps.data.Comment;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -42,18 +44,18 @@ public class DataServlet extends HttpServlet {
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
-    
+
     List<Comment> comments = new ArrayList<>();
     int commentQuantity = Integer.parseInt(request.getParameter("comment-num"));
     // Iterate over all comments in datastore and add them to array
     for (Entity entity : results.asIterable(FetchOptions.Builder.withLimit(commentQuantity))) {
       long id = entity.getKey().getId();
-      String name = (String) entity.getProperty("name");
+      String email = (String) entity.getProperty("email");
       String opinion = (String) entity.getProperty("opinion");
       String content = (String) entity.getProperty("content");
       long timestamp = (long) entity.getProperty("timestamp");
       Comment comment = new Comment.Builder(id)
-                            .withName(name)
+                            .withEmail(email)
                             .hasOpinion(opinion)
                             .commentContent(content)
                             .atTime(timestamp)
@@ -69,14 +71,16 @@ public class DataServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     long timestamp = System.currentTimeMillis();
+    // Get user email
+    UserService userService = UserServiceFactory.getUserService();
+    String email = userService.getCurrentUser().getEmail();
     // Get the input from the form.
-    String name = getParameter(request, "name");
     String opinion = getParameter(request, "opinion");
     String content = getParameter(request, "content");
     // Add comment to datastore
     Entity commentEntity = new Entity("Comment");
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    commentEntity.setProperty("name", name);
+    commentEntity.setProperty("email", email);
     commentEntity.setProperty("opinion", opinion);
     commentEntity.setProperty("content", content);
     commentEntity.setProperty("timestamp", timestamp);
