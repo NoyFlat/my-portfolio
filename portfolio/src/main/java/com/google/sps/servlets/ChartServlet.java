@@ -28,15 +28,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet that gets the chart data from datastore.*/
+/** Servlet that gets the entities that hold the catagories and votes from datastore.*/
 @WebServlet("/chart-data")
 public class ChartServlet extends HttpServlet {
 
-  // Holds the catagories and how many votes there where
-  private Map<String, Long> gameVotes = new HashMap<>();
-
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    // Holds the catagories and how many votes there were
+    Map<String, Long> gameVotes = new HashMap<>();
     Query query = new Query("Chart");
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
