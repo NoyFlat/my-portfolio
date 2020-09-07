@@ -24,14 +24,16 @@ import java.util.List;
 import java.util.Iterator;
 import java.lang.Math;
 
+/** Class that finds available slots to hold a meeting */
 public final class FindMeetingQuery {
-
+    
+/** Returns all the available time slots to schedule the meeting */
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
     List<TimeRange> availableSlots = new ArrayList<>(); 
     List<TimeRange> occupiedSlots = new ArrayList<>();
     Collection<String> requestAttendees = request.getAttendees();
 
-    // If duration time is longer then a day - no option
+    // If duration time is longer than a day - no option
     if(request.getDuration() > TimeRange.WHOLE_DAY.duration()){
         return new ArrayList<TimeRange>();
     }
@@ -68,7 +70,7 @@ public final class FindMeetingQuery {
 
         // While relevent events overlap with current event, we don't have a free slot
         while((i+j) < occupiedSlots.size() && currentEventTime.overlaps(occupiedSlots.get(i+j))){
-            // If the meetings ovelap, the free slot will begin only after the one that ends later
+            // If the meetings overlap, the free slot will begin only after the one that ends later
             freeSlotStart = Math.max(freeSlotStart, occupiedSlots.get(i+j).end());
             j++;
         }
@@ -81,24 +83,19 @@ public final class FindMeetingQuery {
         // Else, the event that doesn't overlap with current event, but we need to check whether there is an empty slot
         else{
             TimeRange nextEventTime = occupiedSlots.get(i+j);
-            if((nextEventTime.start() - freeSlotStart) > 0){
-                freeSlotEnd = nextEventTime.start();
-                checkPlusAddSlot(availableSlots, request, freeSlotStart, freeSlotEnd, false);
-                freeSlotStart = nextEventTime.end();
-            }
-            // Else, The event overlaps with an event that overlaped with current event (and freeSlotStart doesn't change), like:
-            // |----|
-            //   |-----------|
-            //          |---|            
+            freeSlotEnd = nextEventTime.start();
+            checkPlusAddSlot(availableSlots, request, freeSlotStart, freeSlotEnd, false);
+            // Move the start of the free slot, if needed
+            freeSlotStart = Math.max(freeSlotStart, nextEventTime.end()); 
         }
-        // If j == 1 then there was no overlapping and we move to next event
-        // If j > 1 then we already added the slot after the event that ended last in the overlapping events, so we don't need to go throw them again
+        // Because we already checked the overlapping events, we don't need to go through them again
         i += j;
         j = 1;
     }
     return availableSlots;
   }
 
+  /** Checks if the time slot is greater or equel to the duration required, and if so adds it to the available slots. */
   private void checkPlusAddSlot(List<TimeRange> availableSlots, MeetingRequest request, int start, int end, boolean isInclusive){
       if(request.getDuration() <= (end - start)){
         availableSlots.add(TimeRange.fromStartEnd(start, end, isInclusive));
