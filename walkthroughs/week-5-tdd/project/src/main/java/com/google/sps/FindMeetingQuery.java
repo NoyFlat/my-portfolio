@@ -80,13 +80,13 @@ public final class FindMeetingQuery {
     // initialize the free slot candidate to be at the end of first event
     freeSlotStart = currentEventTime.end();
     int i = 0;
-    int j = 1;
-    while (i < occupiedSlots.size()){
+    while(i < occupiedSlots.size()){
+        int j = 1;
         currentEventTime = occupiedSlots.get(i);
 
         // While relevent events overlap with current event, we don't have a free slot
-        while ((i+j) < occupiedSlots.size() && currentEventTime.overlaps(occupiedSlots.get(i+j))){
-            // If the meetings ovelap, the free slot will begin only after the one that ends later
+        while((i+j) < occupiedSlots.size() && currentEventTime.overlaps(occupiedSlots.get(i+j))){
+            // If the meetings overlap, the free slot will begin only after the one that ends later
             freeSlotStart = Math.max(freeSlotStart, occupiedSlots.get(i+j).end());
             j++;
         }
@@ -106,7 +106,6 @@ public final class FindMeetingQuery {
         }
         // Because we already checked the overlapping events, we don't need to go through them again
         i += j;
-        j = 1;
     }
     return availableSlots;
   }
