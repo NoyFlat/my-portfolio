@@ -33,7 +33,7 @@ public final class FindMeetingQuery {
     List<TimeRange> occupiedSlotsWithOptional = new ArrayList<>();
     Collection<TimeRange> availableSlotsWithOptional;
 
-    // If duration time is longer then a day - no option
+    // If duration time is longer than a day - no option
     if (request.getDuration() > TimeRange.WHOLE_DAY.duration()){
         return new ArrayList<TimeRange>();
     }
@@ -102,7 +102,7 @@ public final class FindMeetingQuery {
             freeSlotEnd = nextEventTime.start();
             checkPlusAddSlot(availableSlots, duration, freeSlotStart, freeSlotEnd, false);
             // Move the start of the free slot, if needed
-            freeSlotStart = Math.max(freeSlotStart, nextEventTime.end());          
+            freeSlotStart = Math.max(freeSlotStart, nextEventTime.end());
         }
         // Because we already checked the overlapping events, we don't need to go through them again
         i += j;
