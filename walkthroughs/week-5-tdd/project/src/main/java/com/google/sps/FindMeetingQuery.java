@@ -35,7 +35,7 @@ public final class FindMeetingQuery {
 
     // If duration time is longer than a day - no option
     if(request.getDuration() > TimeRange.WHOLE_DAY.duration()){
-        return new ArrayList<TimeRange>();
+        return availableSlots;
     }
 
     // Add to occupiedSlots only event slots that include people who attend meeting request
@@ -47,7 +47,7 @@ public final class FindMeetingQuery {
     }
 
     // If none of the events have attendees that is in the request, all day is free
-    if(occupiedSlots.size() == 0){
+    if(occupiedSlots.isEmpty()){
         availableSlots.add(TimeRange.WHOLE_DAY);
         return availableSlots;
     }
@@ -64,8 +64,8 @@ public final class FindMeetingQuery {
     // initialize the free slot candidate to be at the end of first event
     freeSlotStart = currentEventTime.end();
     int i = 0;
-    int j = 1;
     while(i < occupiedSlots.size()){
+        int j = 1;
         currentEventTime = occupiedSlots.get(i);
 
         // While relevent events overlap with current event, we don't have a free slot
@@ -86,11 +86,10 @@ public final class FindMeetingQuery {
             freeSlotEnd = nextEventTime.start();
             checkPlusAddSlot(availableSlots, request, freeSlotStart, freeSlotEnd, false);
             // Move the start of the free slot, if needed
-            freeSlotStart = Math.max(freeSlotStart, nextEventTime.end()); 
+            freeSlotStart = Math.max(freeSlotStart, nextEventTime.end());
         }
         // Because we already checked the overlapping events, we don't need to go through them again
         i += j;
-        j = 1;
     }
     return availableSlots;
   }
