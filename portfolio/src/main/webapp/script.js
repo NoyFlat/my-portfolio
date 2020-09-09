@@ -183,6 +183,7 @@ function createListElement(text, type) {
 function callOnloadFunctions(){
   getCommentsFromServer();
   displayLoginBox();
+  createDreamBeansCoffeeMap()
 }
 
 /** Creates the Wolt chart and adds it to the page. */
@@ -229,5 +230,18 @@ function drawGameVotesChart() {
     const chart = new google.visualization.ColumnChart(
         document.getElementById('game-chart-container'));
     chart.draw(data, options);
+  });
+}
+
+/** Creates a map that shows Dream Beans Coffee location and adds it to the page. */
+function createDreamBeansCoffeeMap() {
+  const map = new google.maps.Map(
+      document.getElementById('map'),
+      {center: {lat: 21.029, lng: 105.848}, zoom: 16});
+
+  const dreamBeansMarker = new google.maps.Marker({
+    position: {lat: 21.029069, lng: 105.848583},
+    map: map,
+    title: 'Dream Beans Coffee'
   });
 }
